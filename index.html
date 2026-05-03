@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>指尖上的云南 · 非物质文化遗产</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #faf8f4; --bg2: #f2ede4; --bg3: #e8e2d8;
+    --text: #1a1710; --text2: #6b6355; --text3: #9e9080;
+    --border: rgba(60,50,30,.12); --border2: rgba(60,50,30,.22);
+    --accent: #1b4f6e; --accent-light: #dff0f8; --gold: #c8a96e;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans SC', sans-serif; font-size: 15px; line-height: 1.7; min-height: 100vh; }
+  .page { max-width: 720px; margin: 0 auto; padding: 0 20px 60px; }
+
+  .hero { text-align: center; padding: 56px 20px 36px; }
+  .hero::after { content: ''; display: block; width: 48px; height: 2px; background: var(--gold); margin: 24px auto 0; border-radius: 1px; }
+  .hero-kicker { font-size: 11px; letter-spacing: 5px; color: var(--text3); font-weight: 300; margin-bottom: 14px; text-transform: uppercase; }
+  .hero-title { font-family: 'Noto Serif SC', serif; font-size: 38px; font-weight: 700; line-height: 1.25; margin-bottom: 16px; }
+  .hero-desc { font-size: 14px; color: var(--text2); line-height: 1.9; max-width: 500px; margin: 0 auto; }
+
+  .nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 28px 0 28px; position: sticky; top: 0; background: var(--bg); z-index: 50; border-bottom: .5px solid var(--border); margin-bottom: 0; }
+  .nav-btn { padding: 8px 22px; border-radius: 22px; border: .5px solid var(--border2); background: transparent; color: var(--text2); font-size: 13px; font-family: 'Noto Sans SC', sans-serif; cursor: pointer; transition: all .22s; }
+  .nav-btn:hover { background: var(--bg2); }
+  .nav-btn.on { background: var(--accent); color: var(--accent-light); border-color: var(--accent); font-weight: 500; }
+
+  .sec { display: none; padding-top: 36px; }
+  .sec.show { display: block; }
+
+  /* ── PHOTO HERO ── */
+  .photo-hero {
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    position: relative;
+    aspect-ratio: 3/2;
+  }
+  .photo-hero img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .photo-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.08) 40%, rgba(0,0,0,.62) 100%);
+  }
+  .img-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: rgba(0,0,0,.46); color: #fff;
+    font-size: 11px; padding: 4px 12px;
+    border-radius: 12px; letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+  }
+  .img-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 32px 20px 18px;
+  }
+  .img-caption-title { font-family: 'Noto Serif SC', serif; font-size: 20px; color: #fff; font-weight: 600; }
+  .img-caption-sub { font-size: 12px; color: rgba(255,255,255,.72); margin-top: 3px; line-height: 1.5; }
+
+  /* SVG hero (zharan fallback) */
+  .svg-hero { border-radius: 16px; overflow: hidden; margin-bottom: 24px; position: relative; }
+  .svg-hero svg { display: block; width: 100%; }
+  .svg-hero .img-badge { position: absolute; top: 14px; left: 14px; background: rgba(0,0,0,.46); color: #fff; font-size: 11px; padding: 4px 12px; border-radius: 12px; letter-spacing: 1px; }
+  .svg-hero .img-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 20px 18px; background: linear-gradient(transparent, rgba(0,0,0,.55)); }
+
+  /* ── PHOTO STRIP (3 photos below hero) ── */
+  .photo-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 28px; }
+  .pstrip-item { border-radius: 10px; overflow: hidden; aspect-ratio: 1; border: .5px solid var(--border); }
+  .pstrip-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pstrip-label { font-size: 11px; color: var(--text2); text-align: center; padding: 5px 4px; background: var(--bg2); }
+
+  /* Gallery fallback (SVG) */
+  .gallery { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 28px; }
+  .gcard { border-radius: 10px; overflow: hidden; border: .5px solid var(--border); }
+  .gcard svg { display: block; width: 100%; }
+  .gcard-label { font-size: 11px; color: var(--text2); text-align: center; padding: 6px 4px; background: var(--bg2); }
+
+  .tag { display: inline-block; font-size: 11px; letter-spacing: 1.5px; color: var(--accent); border: .5px solid var(--accent); padding: 3px 11px; border-radius: 12px; margin-bottom: 10px; }
+  .craft-name { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .craft-en { font-size: 11px; color: var(--text3); letter-spacing: 2px; margin-bottom: 20px; font-weight: 300; }
+
+  .info-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 28px; }
+  .icard { background: var(--bg2); border-radius: 10px; padding: 12px; text-align: center; }
+  .icard-l { font-size: 11px; color: var(--text3); margin-bottom: 4px; font-weight: 300; }
+  .icard-v { font-size: 13px; font-weight: 500; font-family: 'Noto Serif SC', serif; }
+
+  .blk { margin-bottom: 24px; }
+  .blk-title { font-family: 'Noto Serif SC', serif; font-size: 15px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .blk-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+  .blk-text { font-size: 13.5px; color: var(--text2); line-height: 1.95; }
+
+  .steps { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .step { flex: 1; min-width: 72px; background: var(--bg2); border-radius: 10px; padding: 12px 8px; text-align: center; }
+  .step-n { font-size: 18px; font-weight: 600; color: var(--accent); font-family: 'Noto Serif SC', serif; line-height: 1; margin-bottom: 6px; }
+  .step-l { font-size: 12px; color: var(--text2); }
+
+  .div { height: .5px; background: var(--border); margin: 20px 0; }
+
+  .addr-card { border: .5px solid var(--border2); border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; background: #fff; }
+  .addr-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .addr-ico { width: 36px; height: 36px; border-radius: 50%; background: #e5f0f8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+  .addr-name { font-size: 15px; font-weight: 500; font-family: 'Noto Serif SC', serif; color: var(--text); margin-bottom: 4px; }
+  .addr-detail { font-size: 12.5px; color: var(--text2); line-height: 1.7; }
+
+  .bars { margin-top: 6px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .bar-lbl { font-size: 11px; color: var(--text3); width: 52px; flex-shrink: 0; }
+  .bar-tr { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .bar-fl { height: 100%; background: var(--gold); border-radius: 2px; }
+  .bar-vl { font-size: 11px; color: var(--text2); }
+
+  .vote-wrap { background: var(--bg2); border-radius: 16px; padding: 28px 24px; text-align: center; margin-bottom: 20px; }
+  .vote-title { font-family: 'Noto Serif SC', serif; font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .vote-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.65; }
+  .vote-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .vbtn { padding: 10px 22px; border-radius: 22px; border: .5px solid var(--border2); background: #fff; color: var(--text); font-size: 13px; font-family: 'Noto Sans SC', sans-serif; cursor: pointer; transition: all .2s; }
+  .vbtn:hover { background: var(--accent); color: var(--accent-light); border-color: var(--accent); }
+  .vres { margin-top: 20px; display: none; }
+  .vrow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .vrow-lbl { width: 56px; color: var(--text2); text-align: right; flex-shrink: 0; }
+  .vrow-tr { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .vrow-fl { height: 100%; background: var(--accent); border-radius: 3px; transition: width .5s ease; width: 0%; }
+  .vrow-n { width: 28px; color: var(--text3); font-size: 12px; }
+
+  .compare-card { border: .5px solid var(--border2); border-radius: 14px; padding: 20px; background: #fff; margin-bottom: 20px; }
+  .compare-card table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-card th { padding: 7px 8px; color: var(--text3); font-weight: 400; border-bottom: .5px solid var(--border); text-align: center; }
+  .compare-card th:first-child { text-align: left; }
+  .compare-card td { padding: 9px 8px; color: var(--text2); text-align: center; }
+  .compare-card td:first-child { font-weight: 500; color: var(--text); text-align: left; font-family: 'Noto Serif SC', serif; }
+  .compare-card tr:nth-child(even) td { background: var(--bg2); }
+
+  .footer { text-align: center; padding: 40px 20px 20px; font-size: 12px; color: var(--text3); border-top: .5px solid var(--border); margin-top: 40px; line-height: 1.8; }
+
+  @media (max-width: 520px) {
+    .hero-title { font-size: 26px; }
+    .photo-strip, .gallery { grid-template-columns: repeat(3,1fr); gap: 5px; }
+  }
+
+  a.addr-link {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 1px;
+    transition: color .2s;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  a.addr-link:hover { color: var(--accent); }
+  .map-icon { font-size: 13px; }
+  .photo-hero img { transition: opacity .2s; }
+  .photo-hero:hover img { opacity: .88; }
+  .photo-hero::after {
+    content: '点击查看更多 →';
+    position: absolute;
+    bottom: 52px; right: 18px;
+    font-size: 11px;
+    color: rgba(255,255,255,.7);
+    background: rgba(0,0,0,.3);
+    padding: 3px 9px;
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <p class="hero-kicker">云南非物质文化遗产</p>
+    <h1 class="hero-title">指尖上的云南</h1>
+    <p class="hero-desc">扎染、瓦猫、甲马拓印——三种历经千年的手工技艺，在云南的山川间代代相传。了解它们的历史与故事，选择你在旅途中想亲身体验的项目。</p>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn on" onclick="show('zr')">扎染</button>
+    <button class="nav-btn" onclick="show('wm')">瓦猫</button>
+    <button class="nav-btn" onclick="show('jm')">甲马拓印</button>
+    <button class="nav-btn" onclick="show('vt')">我要投票 ↗</button>
+  </div>
+
+  <!-- ══ 扎染 ══ -->
+  <div class="sec show" id="s-zr">
+    <div class="photo-hero" style="cursor:pointer" onclick="window.open('https://www.xiaohongshu.com/explore/69e3445c0000000023016d6b?xsec_token=ABAZYdCUlbU8Hr08BnND1HQILkHZsBGL6mCOlW1-VtFTA=&xsec_source=pc_like','_blank')">
+      <img src="images/zharan.jpg" alt="扎染 — 周城一点蓝扎染博物馆">
+      <div class="photo-hero-overlay"></div>
+      <span class="img-badge">周城 · 一点蓝扎染</span>
+      <div class="img-caption">
+        <div class="img-caption-title">蓝白染布随风飘扬</div>
+        <div class="img-caption-sub">白族古院落里，层层叠叠的蓝染布铺满天际——这就是周城的日常风景</div>
+      </div>
+    </div>
+
+    <span class="tag">国家级非遗</span>
+    <div class="craft-name">扎染</div>
+    <div class="craft-en">Tie-dye · ZhāRǎn</div>
+    <div class="info-row">
+      <div class="icard"><div class="icard-l">主要产地</div><div class="icard-v">大理周城</div></div>
+      <div class="icard"><div class="icard-l">历史渊源</div><div class="icard-v">2000年+</div></div>
+      <div class="icard"><div class="icard-l">核心染料</div><div class="icard-v">板蓝根</div></div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">历史与流传</div>
+      <div class="blk-text">扎染古称"绞缬"，汉晋时期已有记载，随南诏文化在大理扎根，至今逾千年。大理喜洲镇周城村素有"白族扎染之乡"之称，全村九成以上家庭从事扎染，现有从业人员逾四千人。2006年，白族扎染技艺被列入第一批国家级非物质文化遗产名录。国家级非遗传承人段银开夫妇将古老染坊改建为全国第一家扎染主题博物馆，免费向游客开放。</div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">文化意涵</div>
+      <div class="blk-text">白族扎染的纹样多取自自然：蝴蝶、梅花、苍山雪、洱海月。每一处留白都是扎绑的痕迹，藏在深蓝里的"冰裂纹"被称为"蓝白之间的呼吸"。所谓"三分染、七分扎"——每一块成品都是独一无二的天然印记。老一辈白族女性认为，送一块自己亲手扎染的布料，是最真诚的情意表达。</div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">工艺流程</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">01</div><div class="step-l">设计图样</div></div>
+        <div class="step"><div class="step-n">02</div><div class="step-l">针线扎缝</div></div>
+        <div class="step"><div class="step-n">03</div><div class="step-l">浸入染缸</div></div>
+        <div class="step"><div class="step-n">04</div><div class="step-l">晾晒氧化</div></div>
+        <div class="step"><div class="step-n">05</div><div class="step-l">解线见花</div></div>
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="blk">
+      <div class="blk-title">体验地点</div>
+      <div class="addr-card">
+        <div class="addr-row">
+          <div class="addr-ico">📍</div>
+          <div>
+            <div class="addr-name"><a href="https://map.baidu.com/poi/%E4%B8%80%E7%82%B9%E8%93%9D%E6%89%8E%E6%9F%93%E4%BD%93%E9%AA%8C/@11144579.125,2968247.75,19z?uid=e563358d99a90309ad0457e4&ugc_type=3&ugc_ver=1&device_ratio=2&compat=1&en_uid=e563358d99a90309ad0457e4&pcevaname=pc4.1&querytype=detailConInfo&da_src=shareurl" target="_blank" class="addr-link">一点蓝扎染 <span class="map-icon">📍</span></a></div>
+            <div class="addr-detail">大理市喜洲镇 · 周城村<br>白族古村落，苍山脚下洱海之畔。亲手完成扎绑→染色→解线全流程，成品（手帕或围巾）当场带走。早上前往可欣赏染坊晾晒染布的壮观景象。</div>
+          </div>
+        </div>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-lbl">上手难度</span><div class="bar-tr"><div class="bar-fl" style="width:30%"></div></div><span class="bar-vl">低，全年龄友好</span></div>
+          <div class="bar-row"><span class="bar-lbl">所需时间</span><div class="bar-tr"><div class="bar-fl" style="width:55%"></div></div><span class="bar-vl">2–3 小时</span></div>
+          <div class="bar-row"><span class="bar-lbl">趣味指数</span><div class="bar-tr"><div class="bar-fl" style="width:88%"></div></div><span class="bar-vl">极高，见花超惊喜</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 瓦猫 ══ -->
+  <div class="sec" id="s-wm">
+    <div class="photo-hero" style="cursor:pointer" onclick="window.open('https://www.xiaohongshu.com/user/profile/5fd413ae0000000001000a08?xsec_token=ABE9OlBXSjHwgX7Quq9E1BY6vl5lsss_4pBjiMVmG7kzA=&xsec_source=pc_search','_blank')">
+      <img src="images/wamao.jpg" alt="瓦猫 — 云南省非物质文化遗产">
+      <div class="photo-hero-overlay"></div>
+      <span class="img-badge">昆明·大理 · 瓦猫体验馆</span>
+      <div class="img-caption">
+        <div class="img-caption-title">屋脊上的守护神兽</div>
+        <div class="img-caption-sub">张口吞煞、护佑平安——瓦猫立于最高处，已守望云南人家数百年</div>
+      </div>
+    </div>
+    <span class="tag">省级非遗</span>
+    <div class="craft-name">瓦猫</div>
+    <div class="craft-en">Roof Cat · WǎMāo</div>
+    <div class="info-row">
+      <div class="icard"><div class="icard-l">主要产地</div><div class="icard-v">昆明·大理</div></div>
+      <div class="icard"><div class="icard-l">材质</div><div class="icard-v">红陶土烧制</div></div>
+      <div class="icard"><div class="icard-l">功能</div><div class="icard-v">镇宅辟邪</div></div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">历史与流传</div>
+      <div class="blk-text">瓦猫造型从虎而来，民间认为它能"食鬼驱邪"，数百年来被安放于云南民居屋脊之上，为一家人看家护院。在昆明，往屋顶放瓦猫的习俗已逾百年。2023年，"昆明瓦猫"被列入云南省第五批省级非物质文化遗产名录。近年随文旅融合兴起，瓦猫从屋顶"跃入"生活，成为冰箱贴、茶具、首饰等200余种文创产品，是云南最受欢迎的伴手礼之一。90后传承人张航创立"心房瓦猫"博物馆，是云南省首家瓦猫专题博物馆。</div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">文化意涵</div>
+      <div class="blk-text">传统瓦猫必须张嘴，且嘴要足够大——"大口吞天下邪祟"。工匠在捏制时会在猫肚子里放入五谷、五色线，寓意五谷丰登、百事顺遂。每只瓦猫面朝外、背对主人，象征忠心守护。头顶的"王"字点明了它虎的血统。云南人说："有猫在，睡得安。"</div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">工艺流程</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">01</div><div class="step-l">备土揉泥</div></div>
+        <div class="step"><div class="step-n">02</div><div class="step-l">手捏塑形</div></div>
+        <div class="step"><div class="step-n">03</div><div class="step-l">雕刻细节</div></div>
+        <div class="step"><div class="step-n">04</div><div class="step-l">阴干备烧</div></div>
+        <div class="step"><div class="step-n">05</div><div class="step-l">窑烧上彩</div></div>
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="blk">
+      <div class="blk-title">体验地点</div>
+      <div class="addr-card" style="margin-bottom:12px">
+        <div class="addr-row">
+          <div class="addr-ico">📍</div>
+          <div>
+            <div class="addr-name"><a href="https://map.baidu.com/poi/%E7%93%A6%E7%8C%AB%E4%BD%93%E9%AA%8C%E9%A6%86/@11167004.545,2885656.69,19z?uid=7152406b327e89464207c192&ugc_type=3&ugc_ver=1&device_ratio=2&compat=1&en_uid=7152406b327e89464207c192&pcevaname=pc4.1&querytype=detailConInfo&da_src=shareurl" target="_blank" class="addr-link">蒙化路瓦猫体验馆 <span class="map-icon">📍</span></a></div>
+            <div class="addr-detail">昆明市 · 蒙化路<br>专业陶艺老师现场指导，亲手揉泥捏猫，烧制后可快递寄回</div>
+          </div>
+        </div>
+      </div>
+      <div class="addr-card">
+        <div class="addr-row">
+          <div class="addr-ico">🐱</div>
+          <div>
+            <div class="addr-name"><a href="https://map.baidu.com/poi/%E6%B3%A5%E4%BA%BA%E8%8B%8F%E7%93%A6%E7%8C%AB%E5%B0%8F%E9%99%A2/@11167422.345,2885665.78,19z?uid=495a6dce0c959f44102935fa&ugc_type=3&ugc_ver=1&device_ratio=2&compat=1&en_uid=495a6dce0c959f44102935fa&pcevaname=pc4.1&querytype=detailConInfo&da_src=shareurl" target="_blank" class="addr-link">泥人苏瓦猫体验馆 <span class="map-icon">📍</span></a></div>
+            <div class="addr-detail">大理市喜洲镇<br>四代传承人苏龙祥家族工坊，院内陈列数百种不同年代瓦猫藏品，可亲手制作专属瓦猫</div>
+          </div>
+        </div>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-lbl">上手难度</span><div class="bar-tr"><div class="bar-fl" style="width:55%"></div></div><span class="bar-vl">中，需要耐心</span></div>
+          <div class="bar-row"><span class="bar-lbl">所需时间</span><div class="bar-tr"><div class="bar-fl" style="width:45%"></div></div><span class="bar-vl">1.5–2 小时</span></div>
+          <div class="bar-row"><span class="bar-lbl">趣味指数</span><div class="bar-tr"><div class="bar-fl" style="width:78%"></div></div><span class="bar-vl">高，成品超有个性</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 甲马拓印 ══ -->
+  <div class="sec" id="s-jm">
+    <div class="photo-hero" style="cursor:pointer" onclick="window.open('https://www.xiaohongshu.com/explore/698fd1cf000000001a0323a8?xsec_token=ABmaGC0ZN3ZC6kEnQk1HBXTa4HteHZp4Lu0WS3_aevTA0=&xsec_source=pc_search&source=web_search_result_notes','_blank')">
+      <img src="images/jiama.jpg" alt="甲马拓印 — 云南大理古城扶摇印记">
+      <div class="photo-hero-overlay"></div>
+      <span class="img-badge">大理古城 · 扶摇印记</span>
+      <div class="img-caption">
+        <div class="img-caption-title">木版之上的神明世界</div>
+        <div class="img-caption-sub">土神、灶神、马神……每一块版都封存着千年民间信仰的温度</div>
+      </div>
+    </div>
+    <span class="tag">民俗非遗</span>
+    <div class="craft-name">甲马拓印</div>
+    <div class="craft-en">Woodblock Print · JiǎMǎ</div>
+    <div class="info-row">
+      <div class="icard"><div class="icard-l">主要产地</div><div class="icard-v">大理·鹤庆</div></div>
+      <div class="icard"><div class="icard-l">材质</div><div class="icard-v">木版·黄草纸</div></div>
+      <div class="icard"><div class="icard-l">功能</div><div class="icard-v">祭祀·祈福</div></div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">历史与流传</div>
+      <div class="blk-text">甲马起源于军队出征时的祭祀符号，唐宋时期随佛道文化深入云南民间，逐渐演变为木版印刷的神明图像，用于民间祭祀与祈福。大理、鹤庆等地至今保留完整的甲马制作技艺，当地人在春节、清明、婚丧嫁娶等重要节点仍使用甲马。其粗犷的线条与古朴造型被艺术界誉为"中国最质朴的版画艺术"，近年越来越多当代艺术家借甲马图像探索当代表达。</div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">图中四款甲马</div>
+      <div class="blk-text">照片中可见四块传统甲马拓印：左上为<strong>土神</strong>（土地公婆，守护田地与家宅）；右上印于粉红纸上的是<strong>灶神</strong>（掌管一家饮食，腊月廿三送灶）；左下为<strong>五谷之神</strong>（身着铠甲、手持稻穗，祈愿丰收）；右下是<strong>马神</strong>（护佑行旅平安）。每一幅线条古拙有力，是民间最质朴的艺术表达。</div>
+    </div>
+    <div class="blk">
+      <div class="blk-title">工艺流程</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">01</div><div class="step-l">选木备料</div></div>
+        <div class="step"><div class="step-n">02</div><div class="step-l">描样上版</div></div>
+        <div class="step"><div class="step-n">03</div><div class="step-l">刻刀雕版</div></div>
+        <div class="step"><div class="step-n">04</div><div class="step-l">蘸墨拓印</div></div>
+        <div class="step"><div class="step-n">05</div><div class="step-l">晾干完成</div></div>
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="blk">
+      <div class="blk-title">体验地点</div>
+      <div class="addr-card">
+        <div class="addr-row">
+          <div class="addr-ico">📍</div>
+          <div>
+            <div class="addr-name"><a href="https://map.baidu.com/poi/%E6%89%B6%E6%91%87%E5%8D%B0%E8%AE%B0%E6%89%8B%E5%B7%A5%E7%94%B2%E9%A9%AC%E4%BD%93%E9%AA%8C%E5%BA%97/@11151213.915,2943258.65,19z?uid=1a3b2105e0a8f3ac8bb988d7&ugc_type=3&ugc_ver=1&device_ratio=2&compat=1&en_uid=1a3b2105e0a8f3ac8bb988d7&pcevaname=pc4.1&querytype=detailConInfo&da_src=shareurl" target="_blank" class="addr-link">扶摇印记 <span class="map-icon">📍</span></a></div>
+            <div class="addr-detail">大理古城 · 藏于古城小巷之中<br>使用传统木版亲手拓印多款神明图案，还可体验在软木上雕刻简单图案，作品当场带走，古朴有禅意</div>
+          </div>
+        </div>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-lbl">上手难度</span><div class="bar-tr"><div class="bar-fl" style="width:28%"></div></div><span class="bar-vl">低，10分钟上手</span></div>
+          <div class="bar-row"><span class="bar-lbl">所需时间</span><div class="bar-tr"><div class="bar-fl" style="width:35%"></div></div><span class="bar-vl">1–1.5 小时</span></div>
+          <div class="bar-row"><span class="bar-lbl">趣味指数</span><div class="bar-tr"><div class="bar-fl" style="width:70%"></div></div><span class="bar-vl">中高，古朴有禅意</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 投票 ══ -->
+  <div class="sec" id="s-vt">
+    <div style="padding-top:8px">
+      <div class="vote-wrap">
+        <div class="vote-title">你最想体验哪个项目？</div>
+        <div class="vote-sub">告诉大家你的选择，看看朋友们的投票结果</div>
+        <div class="vote-btns">
+          <button class="vbtn" onclick="vote('扎染')">🎨 扎染</button>
+          <button class="vbtn" onclick="vote('瓦猫')">🐱 瓦猫陶艺</button>
+          <button class="vbtn" onclick="vote('甲马')">🖋 甲马拓印</button>
+          <button class="vbtn" onclick="vote('全都想')">✨ 全都想！</button>
+        </div>
+        <div class="vres" id="vres">
+          <div class="vrow"><span class="vrow-lbl">扎染</span><div class="vrow-tr"><div class="vrow-fl" id="vb-扎染"></div></div><span class="vrow-n" id="vc-扎染">0</span></div>
+          <div class="vrow"><span class="vrow-lbl">瓦猫</span><div class="vrow-tr"><div class="vrow-fl" id="vb-瓦猫"></div></div><span class="vrow-n" id="vc-瓦猫">0</span></div>
+          <div class="vrow"><span class="vrow-lbl">甲马</span><div class="vrow-tr"><div class="vrow-fl" id="vb-甲马"></div></div><span class="vrow-n" id="vc-甲马">0</span></div>
+          <div class="vrow"><span class="vrow-lbl">全都想</span><div class="vrow-tr"><div class="vrow-fl" id="vb-全都想"></div></div><span class="vrow-n" id="vc-全都想">0</span></div>
+        </div>
+      </div>
+      <div class="compare-card">
+        <div class="blk-title" style="margin-bottom:16px">三项非遗对比一览</div>
+        <table>
+          <thead>
+            <tr><th style="text-align:left">项目</th><th>难度</th><th>耗时</th><th>成品</th><th>体验地点</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>扎染</td><td>低</td><td>2–3h</td><td>布料当场带走</td><td>周城村</td></tr>
+            <tr><td>瓦猫陶艺</td><td>中</td><td>1.5–2h</td><td>烧制后快递</td><td>昆明·喜洲</td></tr>
+            <tr><td>甲马拓印</td><td>低</td><td>1–1.5h</td><td>印画当场带走</td><td>大理古城</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>扎染 · 周城一点蓝 &nbsp;|&nbsp; 瓦猫 · 蒙化路体验馆 / 泥人苏 &nbsp;|&nbsp; 甲马 · 大理古城扶摇印记</p>
+    <p style="margin-top:6px">愿你们在云南的山川之间，找到属于自己的那一份手艺记忆。</p>
+  </div>
+
+</div>
+
+<script>
+  const idMap = {zr:'s-zr',wm:'s-wm',jm:'s-jm',vt:'s-vt'};
+  function show(id) {
+    document.querySelectorAll('.sec').forEach(s => s.classList.remove('show'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+    document.getElementById(idMap[id]).classList.add('show');
+    const idx = {zr:0,wm:1,jm:2,vt:3}[id];
+    document.querySelectorAll('.nav-btn')[idx].classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  const votes = {'扎染':0,'瓦猫':0,'甲马':0,'全都想':0};
+  function vote(key) {
+    votes[key]++;
+    document.getElementById('vres').style.display = 'block';
+    const total = Object.values(votes).reduce((a,b) => a+b, 0);
+    for (const [k,v] of Object.entries(votes)) {
+      const pct = total > 0 ? Math.round(v/total*100) : 0;
+      const bar = document.getElementById('vb-'+k);
+      const cnt = document.getElementById('vc-'+k);
+      if(bar) bar.style.width = pct+'%';
+      if(cnt) cnt.textContent = v;
+    }
+  }
+</script>
+</body>
+</html>
